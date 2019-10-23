@@ -44,9 +44,10 @@ script:
   - codecov
 
 after_script:
+  - export PROJECT_DIR=$PWD
   - cd ~/function
   - zip -r ~/function.zip *
-  - cd ~/Tohaker/yugiohbot-function-title-text/deployment
+  - cd $PROJECT_DIR/deployment
   - chmod +x ./deploy.sh
   - ./deploy.sh
 

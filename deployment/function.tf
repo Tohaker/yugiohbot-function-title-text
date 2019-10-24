@@ -25,6 +25,6 @@ resource "google_cloud_scheduler_job" "every_hour" {
 
   pubsub_target {
     topic_name  = google_pubsub_topic.trigger.id
-    data        = "start"
+    data        = base64encode("start")
   }
 }

@@ -14,7 +14,7 @@ resource "google_cloudfunctions_function" "function" {
     resource    = google_pubsub_topic.trigger.name
   }
 
-  environment_variables {
+  environment_variables = {
     NLTK_DATA = "nltk_data"
   }
 }

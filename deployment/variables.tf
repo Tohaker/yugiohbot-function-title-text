@@ -1,4 +1,9 @@
-variable "source" {
+variable "source_folder" {
+  description = "The location of the function folder."
+  default     = "~/function/"
+}
+
+variable "source_archive" {
   description = "The location of the zipped function archive."
   default     = "~/function.zip"
 }

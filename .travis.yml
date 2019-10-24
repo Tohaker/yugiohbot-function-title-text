@@ -41,13 +41,10 @@ install:
 
 script:
   - pytest --cov=./
-  - codecov
 
 after_script:
-  - export PROJECT_DIR=$PWD
-  - cd ~/function
-  - zip -r ~/function.zip *
-  - cd $PROJECT_DIR/deployment
-  - chmod +x ./deploy.sh
-  - ./deploy.sh
+  - chmod +x ./deployment/deploy.sh
+  - ./deployment/deploy.sh
 
+after_success:
+  - codecov

@@ -41,7 +41,7 @@ install:
   - cp -a yugiohbot/. function/
 
 script:
-  - pytest --cov=./
+  - pytest --cov=./ --ignore=function
 
 after_script:
   - chmod +x ./deployment/deploy.sh

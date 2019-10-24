@@ -1,7 +1,7 @@
 data "archive_file" "function_zip" {
   type = "zip"
-  source_dir = "${path.module}/function/"
-  output_path = "${path.module}/function.zip"
+  source_dir = "../function/"
+  output_path = "../function.zip"
 }
 
 resource "google_storage_bucket" "bucket" {

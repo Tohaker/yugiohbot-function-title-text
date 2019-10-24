@@ -6,6 +6,10 @@ cache:
   directories:
   - "$HOME/google-cloud-sdk/"
 
+stages:
+  - name: after_script
+    if: branch = master
+
 env:
   global:
     - GOOGLE_CLOUD_KEYFILE_JSON=~/account.json

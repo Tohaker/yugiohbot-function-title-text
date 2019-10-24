@@ -13,6 +13,10 @@ resource "google_cloudfunctions_function" "function" {
     event_type  = "google.pubsub.topic.publish"
     resource    = google_pubsub_topic.trigger.name
   }
+
+  environment_variables {
+    NLTK_DATA = "nltk_data"
+  }
 }
 
 resource "google_pubsub_topic" "trigger" {

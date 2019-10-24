@@ -1,12 +1,13 @@
 provider "google" {
-  project = "yugiohbot"
-  region  = "us-east1"
-  zone    = "us-east1-a"
+  project     = "yugiohbot"
+  region      = "us-east1"
+  zone        = "us-east1-a"
 }
 
 terraform {
   backend "gcs" {
-    bucket  = "yugiohbot-tf-state"
-    prefix  = "title-text/state"
+    bucket      = "yugiohbot-tf-state"
+    prefix      = "title-text"
+    credentials = "~/account.json"
   }
 }

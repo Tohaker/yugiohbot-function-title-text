@@ -1,5 +1,5 @@
 resource "google_cloudfunctions_function" "function" {
-  name        = var.function_name
+  name        = var.function_title
   description = var.function_description
   runtime     = var.function_runtime
 

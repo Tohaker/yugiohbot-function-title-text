@@ -1,4 +1,2 @@
 nltk
 textblob
-pytest-cov
-codecov

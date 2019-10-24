@@ -2,7 +2,7 @@ from text import *
 from title import *
 
 
-def function(request):
+def function(event, context):
     source_file = 'resources/cards_api.csv'
 
     nouns, adjectives = title.parse_existing_titles(source_file)
@@ -18,4 +18,4 @@ def function(request):
 
 
 if __name__ == '__main__':
-    print(function(None))
+    print(function(None, None))

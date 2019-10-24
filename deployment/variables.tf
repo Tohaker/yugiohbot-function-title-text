@@ -1,6 +1,11 @@
-variable "function_name" {
+variable "function_title" {
   description = "The name of the function."
   default     = "yugiohbot__title-text"
+}
+
+variable "function_name" {
+  description = "The name of the function archive."
+  default     = "function"
 }
 
 variable "function_description" {

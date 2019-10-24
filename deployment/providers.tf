@@ -3,3 +3,10 @@ provider "google" {
   region  = "us-east1"
   zone    = "us-east1-a"
 }
+
+terraform {
+  backend "gcs" {
+    bucket  = "yugiohbot-tf-state"
+    prefix  = "title-text/state"
+  }
+}

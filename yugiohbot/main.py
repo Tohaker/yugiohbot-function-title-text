@@ -17,8 +17,11 @@ def function(event, context):
     print(result)
 
     credentials, project = google.auth.default()
+    request = google.auth.transport.requests.Request()
+    credentials.refresh(request)
     print('Credentials Valid: ' + str(credentials.valid))
-    # print('Credentials Token: ' + credentials.token)
+    print('Credentials Token:')
+    print(credentials.token)
 
     authed_session = AuthorizedSession(credentials, refresh_status_codes=[401])
     print('Credentials Valid: ' + str(credentials.valid))

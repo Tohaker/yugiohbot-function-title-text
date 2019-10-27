@@ -17,6 +17,8 @@ def function(event, context):
     print(result)
 
     credentials, project = google.auth.default()
+    print(credentials)
+    print(project)
     authed_session = AuthorizedSession(credentials)
 
     response = authed_session.get("https://yugiohbot-card-generator-t4loex5l4q-ue.a.run.app", params=result)

@@ -18,9 +18,10 @@ def function(event, context):
 
     credentials, project = google.auth.default()
     print('Credentials Valid: ' + str(credentials.valid))
-    print('Credentials Token: ' + credentials.token)
+    # print('Credentials Token: ' + credentials.token)
 
     authed_session = AuthorizedSession(credentials, refresh_status_codes=[401])
+    print('Credentials Valid: ' + str(credentials.valid))
     response = authed_session.get("https://yugiohbot-card-generator-t4loex5l4q-ue.a.run.app", params=result)
 
     return response

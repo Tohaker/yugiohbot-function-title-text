@@ -1,7 +1,6 @@
 from text import *
 from title import *
-import google.auth
-from google.auth.transport.requests import AuthorizedSession
+import requests
 
 
 def function(event, context):
@@ -16,18 +15,25 @@ def function(event, context):
     result = {'title': card_title, 'text': card_text}
     print(result)
 
-    credentials, project = google.auth.default()
-    request = google.auth.transport.requests.Request()
-    credentials.refresh(request)
-    print('Credentials Valid: ' + str(credentials.valid))
-    print('Credentials Token:')
-    print(credentials.token)
+    receiving_service_url = "https://yugiohbot-card-generator-t4loex5l4q-ue.a.run.app"
 
-    authed_session = AuthorizedSession(credentials, refresh_status_codes=[401])
-    print('Credentials Valid: ' + str(credentials.valid))
-    response = authed_session.get("https://yugiohbot-card-generator-t4loex5l4q-ue.a.run.app", params=result)
+    # Set up metadata server request
+    # See https://cloud.google.com/compute/docs/instances/verifying-instance-identity#request_signature
+    metadata_server_token_url = 'http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience='
 
-    return response
+    token_request_url = metadata_server_token_url + receiving_service_url
+    token_request_headers = {'Metadata-Flavor': 'Google'}
+
+    # Fetch the token
+    token_response = requests.get(token_request_url, headers=token_request_headers)
+    jwt = token_response.content.decode("utf-8")
+
+    # Provide the token in the request to the receiving service
+    receiving_service_headers = {'Authorization': f'bearer {jwt}'}
+    service_response = requests.get(receiving_service_url, headers=receiving_service_headers, params=result)
+
+    print(service_response.content)
+    return service_response.content
 
 
 if __name__ == '__main__':

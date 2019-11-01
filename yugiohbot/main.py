@@ -8,8 +8,7 @@ def function(event, context):
     nouns, adjectives = title.parse_existing_titles(source_file)
     card_title = title.create_new_title(nouns, adjectives)
 
-    phrases = text.split_descriptions(source_file)
-    card_text = text.generate_card_text(phrases)
+    card_text = text.generate_improved_effect_text('resources/effect_order.csv')
 
     result = {'title': card_title, 'text': card_text}
     print(result)

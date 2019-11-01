@@ -36,8 +36,10 @@ before_install:
   - sudo mv terraform /usr/local/bin/
   - terraform --version
   - pip install -r yugiohbot/requirements.txt
-  - pip install pytest-cov codecov
+  - pip install pytest-cov codecov pandas requests
   - python -m nltk.downloader punkt averaged_perceptron_tagger wordnet
+  - python -c "import data; data.utilities.import_from_api()"
+  - python -c "import data; data.utilities.label_effects()"
 
 install:
   - mkdir -p function/nltk_data/

@@ -6,10 +6,6 @@ cache:
   directories:
   - "$HOME/google-cloud-sdk/"
 
-stages:
-  - name: after_script
-    if: branch = master
-
 env:
   global:
     - GOOGLE_CLOUD_KEYFILE_JSON=~/account.json
@@ -35,21 +31,33 @@ before_install:
   - unzip terraform_${TERRAFORM}_linux_amd64.zip
   - sudo mv terraform /usr/local/bin/
   - terraform --version
-  - pip install -r yugiohbot/requirements.txt
-  - pip install pytest-cov codecov
-  - python -m nltk.downloader punkt averaged_perceptron_tagger wordnet
 
 install:
-  - mkdir -p function/nltk_data/
-  - cp -a ~/nltk_data/. function/nltk_data/
-  - cp -a yugiohbot/. function/
+  - pip install -r yugiohbot/requirements.txt
+  - pip install pytest-cov codecov pandas requests
+  - python -m nltk.downloader punkt averaged_perceptron_tagger wordnet
+  - python -c "import data; data.utilities.import_from_api()"
+  - python -c "import data; data.utilities.label_effects()"
+  - python -c "import data; data.utilities.label_flavour_text()"
 
 script:
-  - pytest --cov=./ --ignore=function
-
-after_script:
-  - chmod +x ./deployment/deploy.sh
-  - ./deployment/deploy.sh
+  - pytest --cov=./
 
 after_success:
   - codecov
+
+before_deploy:
+  - mkdir -p function/nltk_data/
+  - cp -a ~/nltk_data/. function/nltk_data/
+  - mkdir -p yugiohbot/resources
+  - cp cards_api.csv yugiohbot/resources/
+  - cp effect_order.csv yugiohbot/resources/
+  - cp flavour_list.csv yugiohbot/resources/
+  - cp -a yugiohbot/. function/
+  - chmod +x ./deployment/deploy.sh
+
+deploy:
+  - provider: script
+    script: bash deployment/deploy.sh
+    on:
+      branch: master

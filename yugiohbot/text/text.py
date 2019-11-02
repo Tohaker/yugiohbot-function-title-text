@@ -1,9 +1,7 @@
-import csv
-import logging
 import random
-import re
 
 import nltk.data
+import pandas as pd
 
 
 def generate_card_text(phrases):
@@ -45,29 +43,51 @@ def generate_card_text(phrases):
     return result
 
 
-def split_descriptions(file):
-    existing_desc = []
+def generate_improved_effect_text(file):
+    start = pd.read_csv(file)['start'].dropna().values.tolist()
+    comma = pd.read_csv(file)['comma'].dropna().values.tolist()
+    semicolon = pd.read_csv(file)['semicolon'].dropna().values.tolist()
+    colon = pd.read_csv(file)['colon'].dropna().values.tolist()
+    end = pd.read_csv(file)['end'].dropna().values.tolist()
 
-    try:
-        with open(file, encoding="utf8") as csvfile:
-            read_csv = csv.reader(csvfile)
-            for row in read_csv:
-                if read_csv.line_num != 1:
-                    existing_desc.append(row[2])
-    except FileNotFoundError as fe:
-        logging.debug('File: ' + file + ' could not be found.\n' + str(fe))
-        return existing_desc
+    switcher = {
+        ',': comma,
+        ';': semicolon,
+        ':': colon
+    }
 
-    phrases = []
-    tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+    no_sentences = random.randint(1, 3)  # 3 sentences maximum
+    sentences = []
+    separator = ' '
 
-    for desc in existing_desc:
-        sentences = tokenizer.tokenize(desc)
-        p = []
-        for sentence in sentences:
-            new_sentence = sentence.replace(',', ',,').replace(';', ';;').replace(':', '::').replace('- ', '-- ')
-            p = re.split(', |; |: |- ', new_sentence)
+    for s in range(no_sentences):
+        phrases = [random.choice(start)]
+        sentence_length = random.randint(1, 5)  # 1 minimum. We always have a start. 1 indicates only an end.
+        progress = 1
 
-        phrases.append(p)
+        punctuation = phrases[0][-1:]  # Get the last character from the starting phrase.
+        while punctuation != '.' and sentence_length > 1 and progress < sentence_length - 1:
+            comes_from = switcher.get(punctuation)
+            phrases.append(random.choice(comes_from))
+            punctuation = phrases[-1][-1:]
+            progress += 1  # Show our progress through the sentence.
 
-    return phrases
+        phrases.append(random.choice(end))
+        result = separator.join(phrases)
+
+        sentences.append(result)
+
+    effect = separator.join(sentences)
+    return effect
+
+def generate_flavour_text(file):
+    flavour = pd.read_csv(file)['flavour text'].dropna().values.tolist()
+
+    separator = ' '
+    sentences = []
+    no_sentences = random.randint(1, 3)  # 3 sentences maximum
+
+    for s in range(no_sentences):
+        sentences.append(random.choice(flavour))
+
+    return separator.join(sentences)

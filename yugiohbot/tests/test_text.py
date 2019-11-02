@@ -30,14 +30,6 @@ class TestTextGenerator(unittest.TestCase):
     def tearDown(self):
         os.remove(self.test_csv_file)
 
-    def test_split_description_with_valid_csv(self):
-        phrases = text.split_descriptions(self.test_csv_file)
-        self.assertEqual(len(phrases), 5)
-
-    def test_split_description_with_invalid_csv(self):
-        phrases = text.split_descriptions('badfile.csv')
-        self.assertEqual(len(phrases), 0)
-
     def test_generate_card_text_with_five_valid_phrases(self):
         phrases = [['here.', 'are.'], ['some.', 'phrases,'], ['that;', 'will:'], ['work.'], ['I.', 'hope,']]
         t = text.generate_card_text(phrases)

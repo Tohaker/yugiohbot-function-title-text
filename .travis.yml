@@ -54,6 +54,7 @@ before_deploy:
   - cp effect_order.csv yugiohbot/resources/
   - cp flavour_list.csv yugiohbot/resources/
   - cp -a yugiohbot/. function/
+  - ls -l
   - chmod +x ./deployment/deploy.sh
 
 deploy:

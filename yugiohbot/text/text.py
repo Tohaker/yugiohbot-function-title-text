@@ -79,3 +79,15 @@ def generate_improved_effect_text(file):
 
     effect = separator.join(sentences)
     return effect
+
+def generate_flavour_text(file):
+    flavour = pd.read_csv(file)['flavour text'].dropna().values.tolist()
+
+    separator = ' '
+    sentences = []
+    no_sentences = random.randint(1, 3)  # 3 sentences maximum
+
+    for s in range(no_sentences):
+        sentences.append(random.choice(flavour))
+
+    return separator.join(sentences)

@@ -25,7 +25,7 @@ resource "google_pubsub_topic" "trigger" {
 
 resource "google_cloud_scheduler_job" "every_hour" {
   name      = var.scheduler_job
-  schedule  = "0 * * * *"
+  schedule  = "0 */3 * * *"
 
   pubsub_target {
     topic_name  = google_pubsub_topic.trigger.id

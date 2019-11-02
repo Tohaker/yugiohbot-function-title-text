@@ -11,9 +11,11 @@ def import_from_api():
     response = requests.get('https://db.ygoprodeck.com/api/v5/cardinfo.php')
 
     # Create a new Dataframe and Array to store the card names in.
-    output = pd.DataFrame(columns=['card', 'effect'])
+    output = pd.DataFrame(columns=['card', 'type', 'effect', 'flavour'])
     card_names = []
+    card_types = []
     card_effect = []
+    is_flavour = []
 
     if response.status_code == 200:
         j = json.loads(response.content.decode('utf-8'))
@@ -21,22 +23,32 @@ def import_from_api():
         # The way this API structures its data means we have access the 1st element which contains all the cards.
         for card in j:
             name = card['name']  # Get the name from each card. It is a 'dict' object.
+            type = card['type']
             description = card['desc']
-            print(name)
-            print(description)
+
+            if type == 'Normal Monster':
+                is_flavour.append(True)
+            else:
+                is_flavour.append(False)
+
             card_names.append(name)
+            card_types.append(type)
             card_effect.append(description)
 
         output['card'] = card_names
+        output['type'] = card_types
         output['effect'] = card_effect
+        output['flavour'] = is_flavour
         output.to_csv('cards_api.csv', index=False)  # Output to a CSV.
     else:
         return None
 
 
 def label_effects():
-    effects = pd.read_csv('cards_api.csv')['effect'].dropna().values.tolist()
-    columns = ['start', 'comma', 'semicolon', 'colon', 'hyphen', 'end']
+    file = '../resources/cards_api.csv'
+    cards = pd.read_csv(file)['card'].dropna().values.tolist()
+    effects = pd.read_csv(file)['effect'].dropna().values.tolist()
+    is_flavour = pd.read_csv(file)['flavour'].dropna().values.tolist()
 
     sentence_start = []
     comma = []
@@ -46,16 +58,17 @@ def label_effects():
 
     tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 
-    for effect in effects:
-        sentences = tokenizer.tokenize(effect)
+    for card, effect in enumerate(effects):
+
+        # We don't want to use flavour text in effects.
+        if is_flavour[card]:
+            continue
+
+        new_effect = effect.replace('max. ', 'max ')
+        sentences = tokenizer.tokenize(new_effect)
 
         for sentence in sentences:
-            new_sentence = sentence.replace(',', ',,').replace(';', ';;').replace(':', '::')
-
-            if new_sentence.count('"') > 0:
-                new_sentence = new_sentence
-
-            phrases = re.split(', |; |: ', new_sentence)
+            phrases = extract_phrases(sentence, cards[card])
 
             previous_phrase = ''
 
@@ -67,7 +80,7 @@ def label_effects():
                     previous_phrase = phrase
                     continue
 
-                if i == len(phrase):
+                if i == len(phrases) - 1:
                     sentence_end.append(phrase)
                     continue
 
@@ -94,20 +107,33 @@ def label_effects():
     output.to_csv('effect_order.csv', index=False)
 
 
-def find_proper_nouns(sentence):
-    if sentence.count('"') == 0:
-        return None
+def label_flavour_text():
+    file = '../resources/cards_api.csv'
+    effects = pd.read_csv(file)['effect'].dropna().values.tolist()
+    is_flavour = pd.read_csv(file)['flavour'].dropna().values.tolist()
 
-    nouns = []
-    word = ''
-    inside_noun = False
+    tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+    all_flavours = []
 
-    for letter in sentence:
-        if letter == '"':
-            inside_noun = not inside_noun
+    for i, effect in enumerate(effects):
+        if is_flavour[i]:
+            sentences = tokenizer.tokenize(effect)
+            all_flavours.extend(sentences)
 
-        if inside_noun:
-            word += letter
-        else:
-            if word:
-                nouns.append(word)
+    output = pd.DataFrame({'flavour text': all_flavours})
+    output.to_csv('flavour_list.csv', index=False)
+
+
+def extract_phrases(sentence, card):
+    names = re.findall('"([^"]*)"', sentence)
+    for name in names:
+        if name == card:
+            sentence = sentence.replace(name, '{}')
+
+    new_sentence = sentence.replace(',', ',,').replace(';', ';;').replace(':', '::')
+    phrases = re.split(', |; |: ', new_sentence)
+    return phrases
+
+
+if __name__ == '__main__':
+    label_flavour_text()

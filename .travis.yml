@@ -47,14 +47,13 @@ after_success:
   - codecov
 
 before_deploy:
-  - mkdir -p function/nltk_data/
-  - cp -a ~/nltk_data/. function/nltk_data/
+  - mkdir -p deployment/function/nltk_data/
+  - cp -a ~/nltk_data/. deployment/function/nltk_data/
   - mkdir -p yugiohbot/resources
   - cp cards_api.csv yugiohbot/resources/
   - cp effect_order.csv yugiohbot/resources/
   - cp flavour_list.csv yugiohbot/resources/
-  - cp -a yugiohbot/. function/
-  - ls -l
+  - cp -a yugiohbot/. deployment/function/
   - chmod +x ./deployment/deploy.sh
 
 deploy:

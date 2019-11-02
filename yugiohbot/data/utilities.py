@@ -45,7 +45,7 @@ def import_from_api():
 
 
 def label_effects():
-    file = '../resources/cards_api.csv'
+    file = 'cards_api.csv'
     cards = pd.read_csv(file)['card'].dropna().values.tolist()
     effects = pd.read_csv(file)['effect'].dropna().values.tolist()
     is_flavour = pd.read_csv(file)['flavour'].dropna().values.tolist()
@@ -108,7 +108,7 @@ def label_effects():
 
 
 def label_flavour_text():
-    file = '../resources/cards_api.csv'
+    file = 'cards_api.csv'
     effects = pd.read_csv(file)['effect'].dropna().values.tolist()
     is_flavour = pd.read_csv(file)['flavour'].dropna().values.tolist()
 

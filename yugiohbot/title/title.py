@@ -10,7 +10,10 @@ def parse_existing_titles(file):
     nouns = []
     adjectives = []
 
-    existing_names = pd.read_csv(file)['card'].dropna().values.tolist()
+    try:
+        existing_names = pd.read_csv(file)['card'].dropna().values.tolist()
+    except FileNotFoundError as fe:
+        return nouns, adjectives
 
     # Read each card name into a TextBlob and extract the noun into a list.
     for name in existing_names:

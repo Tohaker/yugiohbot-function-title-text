@@ -1,2 +1,4 @@
 nltk
 textblob
+pandas
+requests

@@ -31,6 +31,8 @@ before_install:
   - unzip terraform_${TERRAFORM}_linux_amd64.zip
   - sudo mv terraform /usr/local/bin/
   - terraform --version
+
+install:
   - pip install -r yugiohbot/requirements.txt
   - pip install pytest-cov codecov pandas requests
   - python -m nltk.downloader punkt averaged_perceptron_tagger wordnet
@@ -38,8 +40,11 @@ before_install:
   - python -c "import data; data.utilities.label_effects()"
   - python -c "import data; data.utilities.label_flavour_text()"
 
-install:
+script:
   - pytest --cov=./
+
+after_success:
+  - codecov
 
 before_deploy:
   - mkdir -p function/nltk_data/
@@ -56,6 +61,3 @@ deploy:
     script: bash deployment/deploy.sh
     on:
       branch: master
-
-after_success:
-  - codecov

@@ -10,7 +10,7 @@ def import_from_api():
     # Get the data for all cards from the API.
     response = requests.get('https://db.ygoprodeck.com/api/v5/cardinfo.php')
 
-    # Create a new Dataframe and Array to store the card names in.
+    # Create a new Dataframe and arrays to store the card details in.
     output = pd.DataFrame(columns=['card', 'type', 'effect', 'flavour'])
     card_names = []
     card_types = []
@@ -128,7 +128,7 @@ def extract_phrases(sentence, card):
     names = re.findall('"([^"]*)"', sentence)
     for name in names:
         if name == card:
-            sentence = sentence.replace(name, '{}')
+            sentence = sentence.replace(name, '{0}')
 
     new_sentence = sentence.replace(',', ',,').replace(';', ';;').replace(':', '::')
     phrases = re.split(', |; |: ', new_sentence)
@@ -136,4 +136,4 @@ def extract_phrases(sentence, card):
 
 
 if __name__ == '__main__':
-    label_flavour_text()
+    import_from_api()

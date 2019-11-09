@@ -34,7 +34,7 @@ before_install:
 
 install:
   - pip install -r yugiohbot/requirements.txt
-  - pip install pytest-cov codecov pandas requests
+  - pip install pytest-cov codecov pandas
   - python -m nltk.downloader punkt averaged_perceptron_tagger wordnet
   - python -c "import data; data.utilities.import_from_api()"
   - python -c "import data; data.utilities.label_effects()"

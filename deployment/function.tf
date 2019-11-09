@@ -3,7 +3,7 @@ resource "google_cloudfunctions_function" "function" {
   description = var.function_description
   runtime     = var.function_runtime
 
-  available_memory_mb   = 512
+  available_memory_mb   = 2048
   source_archive_bucket = google_storage_bucket.bucket.name
   source_archive_object = google_storage_bucket_object.function.name
   timeout               = 120
@@ -25,7 +25,7 @@ resource "google_pubsub_topic" "trigger" {
 
 resource "google_cloud_scheduler_job" "every_hour" {
   name      = var.scheduler_job
-  schedule  = "0 */3 * * *"
+  schedule  = "0 */2 * * *"
 
   pubsub_target {
     topic_name  = google_pubsub_topic.trigger.id

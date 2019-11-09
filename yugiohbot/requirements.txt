@@ -2,3 +2,5 @@ nltk
 textblob
 pandas
 requests
+textgenrnn
+tensorflow==1.14

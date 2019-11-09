@@ -2,5 +2,5 @@
 .terraform
 __pycache__
 *.zip
-*.json
+gcp_terraform.json
 *.csv

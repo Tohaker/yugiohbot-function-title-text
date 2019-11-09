@@ -1,8 +1,6 @@
-import csv
 import random
-import logging
-import pandas as pd
 
+import pandas as pd
 from textblob import TextBlob
 
 

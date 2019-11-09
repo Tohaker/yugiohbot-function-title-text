@@ -39,7 +39,7 @@ def import_from_api():
         output['type'] = card_types
         output['effect'] = card_effect
         output['flavour'] = is_flavour
-        output.to_csv('../resources/cards_api.csv', index=False)  # Output to a CSV.
+        output.to_csv('cards_api.csv', index=False)  # Output to a CSV.
     else:
         return None
 

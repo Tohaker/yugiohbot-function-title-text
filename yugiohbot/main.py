@@ -15,6 +15,16 @@ def function(event, context):
     template = ['Normal', 'Effect', 'Ritual', 'Synchro', 'DarkSynchro', 'Xyz', 'Spell', 'Trap', 'Fusion']
     card_template = random.choice(template)
 
+    result = {'title': card_title, 'effect': generate_effect(card_template, 'resources/flavour_list.csv'), 'template': card_template}
+    print(result)
+
+    service_response = call_next_service(result)
+
+    print(service_response.content)
+    return service_response.content
+
+
+def generate_effect(template, flavour_location):
     ml_selector = {
         'Normal': 'flavour',
         'Effect': 'monster',
@@ -27,14 +37,19 @@ def function(event, context):
         'Fusion': 'fusion'
     }
 
-    if ml_selector.get(card_template) == 'flavour':
-        card_effect = text.generate_flavour_text('resources/flavour_list.csv')
+    t = ml_selector.get(template, None)
+
+    if t == 'flavour':
+        card_effect = text.generate_flavour_text(flavour_location)
+    elif t is not None:
+        card_effect = ml_text.generate_card_description(ml_selector.get(template))
     else:
-        card_effect = ml_text.generate_card_description(ml_selector.get(card_template))
+        card_effect = 'Oops! No Effect could be generated for this card. Destroy it.'
 
-    result = {'title': card_title, 'effect': card_effect, 'template': card_template}
-    print(result)
+    return card_effect
 
+
+def call_next_service(result):
     receiving_service_url = "https://yugiohbot-card-generator-t4loex5l4q-ue.a.run.app"
 
     # Set up metadata server request
@@ -52,8 +67,7 @@ def function(event, context):
     receiving_service_headers = {'Authorization': 'bearer {}'.format(jwt)}
     service_response = requests.get(receiving_service_url, headers=receiving_service_headers, params=result)
 
-    print(service_response.content)
-    return service_response.content
+    return service_response
 
 
 if __name__ == '__main__':

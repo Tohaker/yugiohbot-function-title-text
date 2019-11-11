@@ -39,6 +39,10 @@ install:
   - python -c "import data; data.utilities.import_from_api()"
   - python -c "import data; data.utilities.label_effects()"
   - python -c "import data; data.utilities.label_flavour_text()"
+  - mkdir -p yugiohbot/resources
+  - cp cards_api.csv yugiohbot/resources/
+  - cp effect_order.csv yugiohbot/resources/
+  - cp flavour_list.csv yugiohbot/resources/
 
 script:
   - pytest --cov=./
@@ -49,10 +53,6 @@ after_success:
 before_deploy:
   - mkdir -p deployment/function/nltk_data/
   - cp -a ~/nltk_data/. deployment/function/nltk_data/
-  - mkdir -p yugiohbot/resources
-  - cp cards_api.csv yugiohbot/resources/
-  - cp effect_order.csv yugiohbot/resources/
-  - cp flavour_list.csv yugiohbot/resources/
   - cp -a yugiohbot/. deployment/function/
   - chmod +x ./deployment/deploy.sh
 

@@ -1,5 +1,4 @@
 import random
-import os
 
 import requests
 
@@ -16,7 +15,8 @@ def function(event, context):
     template = ['Normal', 'Effect', 'Ritual', 'Synchro', 'DarkSynchro', 'Xyz', 'Spell', 'Trap', 'Fusion']
     card_template = random.choice(template)
 
-    result = {'title': card_title, 'effect': generate_effect(card_template, 'resources/flavour_list.csv'), 'template': card_template}
+    result = {'title': card_title, 'effect': generate_effect(card_template, 'resources/flavour_list.csv'),
+              'template': card_template}
     print(result)
 
     service_response = call_next_service(result)

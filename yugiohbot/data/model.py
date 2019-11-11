@@ -1,5 +1,6 @@
-from textgenrnn import textgenrnn
 import os
+
+from textgenrnn import textgenrnn
 
 
 def generate_from_model(name, length):

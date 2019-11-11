@@ -1,4 +1,5 @@
 from textgenrnn import textgenrnn
+import os
 
 
 def generate_from_model(name, length):
@@ -20,7 +21,8 @@ def generate_from_model(name, length):
 
 
 def generate_single(name, temperature):
-    prefix = 'resources/model/outputs/{}'.format(name)
+    p = os.getenv('TEST_ML', 'resources/model/outputs/{}')
+    prefix = p.format(name)
     textgen = textgenrnn(weights_path=prefix + '_weights.hdf5', vocab_path=prefix + '_vocab.json',
                          config_path=prefix + '_config.json')
     return textgen.generate(1, temperature=temperature, return_as_list=True)

@@ -41,9 +41,7 @@ install:
   - python -c "import data; data.utilities.label_flavour_text()"
 
 script:
-  - cd yugiohbot
   - pytest --cov=./
-  - cd ../
 
 after_success:
   - codecov

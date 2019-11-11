@@ -5,7 +5,7 @@ import main
 
 class TestMain(unittest.TestCase):
     def test_generate_effect(self):
-        l = 'resources/flavour_list.csv'
+        l = 'yugiohbot/resources/flavour_list.csv'
         test_templates = ['Normal', 'Effect', 'Spell', 'Trap', 'Fusion']
         for t in test_templates:
             e = main.generate_effect(t, l)

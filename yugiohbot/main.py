@@ -16,9 +16,7 @@ def function(event, context):
     template = ['Normal', 'Effect', 'Ritual', 'Synchro', 'DarkSynchro', 'Xyz', 'Spell', 'Trap', 'Fusion']
     card_template = random.choice(template)
 
-    flavour_location = os.getenv('TEST_FLAVOUR', 'resources/flavour_list.csv')
-
-    result = {'title': card_title, 'effect': generate_effect(card_template, flavour_location), 'template': card_template}
+    result = {'title': card_title, 'effect': generate_effect(card_template, 'resources/flavour_list.csv'), 'template': card_template}
     print(result)
 
     service_response = call_next_service(result)

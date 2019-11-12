@@ -1,2 +1,2 @@
-from . import text
 from . import ml_text
+from . import text

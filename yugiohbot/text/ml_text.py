@@ -25,7 +25,7 @@ def generate_card_description(type):
 
 def format_punctuation(desc):
     return desc.replace(' .', '.').replace(' ,', ',').replace(' - ', '-').replace(' ;', ';') \
-        .replace(' :', ':').replace('( ', '(').replace(' )', ')')
+        .replace(' :', ':').replace('( ', '(').replace(' )', ')').replace(' \' ', '\'')
 
 
 def remove_whitespace(matchobj):

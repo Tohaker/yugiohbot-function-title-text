@@ -1,0 +1,74 @@
+name: CD
+
+on:
+  push:
+    branches:
+      master
+
+jobs:
+  build:
+    env:
+      PYTHONPATH: yugiohbot
+      CLOUDSDK_CORE_DISABLE_PROMPTS: 1
+      ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
+      PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
+      - uses: hashicorp/setup-terraform@v1
+      - run: terraform --version
+
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_email: ${{ secrets.GCP_EMAIL }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          export_default_credentials: true
+
+      - name: Install GCP Components
+        run: |
+          gcloud info
+          gcloud --quiet components install beta
+          gcloud --quiet components update
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r yugiohbot/requirements.txt
+          pip install pytest-cov codecov pandas
+
+      - name: Download NLTK
+          run: |
+            python -m nltk.downloader punkt averaged_perceptron_tagger wordnet
+
+      - name: Create Data
+        run: |
+          python -c "import data; data.utilities.import_from_api()"
+          python -c "import data; data.utilities.label_effects()"
+          python -c "import data; data.utilities.label_flavour_text()"
+          mkdir -p yugiohbot/resources
+          cp cards_api.csv yugiohbot/resources/
+          cp effect_order.csv yugiohbot/resources/
+          cp flavour_list.csv yugiohbot/resources/
+
+      - name: Run Tests
+        run: pytest --cov=./
+
+      - name: Report coverage
+        run: codecov
+
+      - name: Setup Deployment
+        run: |
+          mkdir -p deployment/function/nltk_data
+          cp -a ~/nltk_data/. deployment/function/nltk_data/
+          cp -a yugiohbot/. deployment/function/
+          chmod +x ./deployment/deploy.sh
+
+      - name: Run Deployment
+        run: deployment/deploy.sh

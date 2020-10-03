@@ -8,6 +8,5 @@ terraform {
   backend "gcs" {
     bucket      = "yugiohbot-tf-state"
     prefix      = "title-text"
-    credentials = "~/account.json"
   }
 }

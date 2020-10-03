@@ -1,0 +1,44 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    env:
+      PYTHONPATH: yugiohbot
+      ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
+      PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r yugiohbot/requirements.txt
+          pip install pytest-cov codecov pandas
+
+      - name: Download NLTK
+        run: |
+          python -m nltk.downloader punkt averaged_perceptron_tagger wordnet
+
+      - name: Create Data
+        run: |
+          python -c "import data; data.utilities.import_from_api()"
+          python -c "import data; data.utilities.label_effects()"
+          python -c "import data; data.utilities.label_flavour_text()"
+          mkdir -p yugiohbot/resources
+          cp cards_api.csv yugiohbot/resources/
+          cp effect_order.csv yugiohbot/resources/
+          cp flavour_list.csv yugiohbot/resources/
+
+      - name: Run Tests
+        run: pytest --cov=./
+
+      - name: Report coverage
+        run: codecov

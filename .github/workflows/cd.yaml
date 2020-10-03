@@ -44,8 +44,8 @@ jobs:
           pip install pytest-cov codecov pandas
 
       - name: Download NLTK
-          run: |
-            python -m nltk.downloader punkt averaged_perceptron_tagger wordnet
+        run: |
+          python -m nltk.downloader punkt averaged_perceptron_tagger wordnet
 
       - name: Create Data
         run: |

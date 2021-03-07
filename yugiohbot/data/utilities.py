@@ -21,7 +21,7 @@ def import_from_api():
         j = json.loads(response.content.decode('utf-8'))
 
         # The way this API structures its data means we have access the 1st element which contains all the cards.
-        for card in j:
+        for card in j['data']:
             name = card['name']  # Get the name from each card. It is a 'dict' object.
             type = card['type']
             description = card['desc']

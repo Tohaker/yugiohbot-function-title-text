@@ -1,6 +1,6 @@
 # YuGiOhBot: Title and Text Function
 
-Build status: ![](https://travis-ci.org/YuGiOhBot3000/yugiohbot-function-title-text.svg?branch=master)
+Build status: [![Continuous integration Actions Status](https://github.com/YuGiOhBot3000/yugiohbot-function-title-text/workflows/CI/badge.svg)](https://github.com/YuGiOhBot3000/yugiohbot-function-title-text/actions)
 
 This project sets up the card title and effect text for the YuGiOhBot.
 

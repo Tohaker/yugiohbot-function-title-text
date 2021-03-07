@@ -8,7 +8,7 @@ import requests
 
 def import_from_api():
     # Get the data for all cards from the API.
-    response = requests.get('https://db.ygoprodeck.com/api/v5/cardinfo.php')
+    response = requests.get('https://db.ygoprodeck.com/api/v7/cardinfo.php')
 
     # Create a new Dataframe and arrays to store the card details in.
     output = pd.DataFrame(columns=['card', 'type', 'effect', 'flavour'])
